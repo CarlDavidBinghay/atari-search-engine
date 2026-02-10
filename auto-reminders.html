@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATARI | Tasks & Activity Tracking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --luxury-green: #0a3d2e;
+            --emerald-green: #10b981;
+            --light-green: #ecfdf5;
+            --gold-primary: #d4af37;
+            --gold-light: #fef3c7;
+            --gold-dark: #b45309;
+            --pure-white: #ffffff;
+            --bg-gray: #f8fafc;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --primary-gradient: linear-gradient(135deg, var(--gold-primary) 0%, var(--emerald-green) 100%);
+            --secondary-gradient: linear-gradient(135deg, var(--luxury-green) 0%, var(--emerald-green) 100%);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-gray);
+        }
+        
+        .font-montserrat {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .font-poppins {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .luxury-sidebar {
+            background: var(--luxury-green);
+        }
+        
+        .sidebar-gradient {
+            background: var(--secondary-gradient);
+        }
+        
+        .gold-gradient {
+            background: var(--primary-gradient);
+        }
+        
+        .text-emerald {
+            color: var(--emerald-green);
+        }
+        
+        .bg-emerald {
+            background-color: var(--emerald-green);
+        }
+        
+        .text-gold {
+            color: var(--gold-primary);
+        }
+        
+        .bg-gold {
+            background-color: var(--gold-primary);
+        }
+        
+        .bg-light-green {
+            background-color: var(--light-green);
+        }
+        
+        .bg-gold-light {
+            background-color: var(--gold-light);
+        }
+        
+        .border-emerald {
+            border-color: var(--emerald-green);
+        }
+        
+        .border-gold {
+            border-color: var(--gold-primary);
+        }
+        
+        /* Custom scrollbar */
+        .sidebar-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        .sidebar-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .sidebar-scrollbar::-webkit-scrollbar-thumb {
+            background: var(--gold-primary);
+            border-radius: 10px;
+        }
+        
+        /* Card hover effects */
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+        }
+        
+        /* Notification badge */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            background-color: #ef4444;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        
+        /* Elegant divider */
+        .elegant-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+        }
+        
+        /* Smooth animations */
+        .smooth-transition {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Modern input focus */
+        .modern-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+            border-color: var(--emerald-green);
+        }
+        
+        /* Sidebar menu item hover effect */
+        .sidebar-menu-item {
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-menu-item:hover {
+            background-color: rgba(16, 185, 129, 0.1);
+            border-left-color: var(--emerald-green);
+        }
+        
+        .sidebar-menu-item.active {
+            background-color: rgba(16, 185, 129, 0.15);
+            border-left-color: var(--emerald-green);
+        }
+        
+        /* Reminder priority colors */
+        .priority-high {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left: 4px solid #ef4444;
+        }
+        
+        .priority-medium {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .priority-low {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left: 4px solid #10b981;
+        }
+        
+        /* Progress bar styling */
+        .progress-bar {
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: var(--primary-gradient);
+        }
+        
+        /* Activity status colors */
+        .status-working {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+        }
+        
+        .status-review {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+        }
+        
+        .status-complete {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        
+        .status-pending {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+        
+        /* Live indicator */
+        .live-indicator {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        /* Activity type badges */
+        .badge-document {
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            color: white;
+        }
+        
+        .badge-meeting {
+            background: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
+            color: white;
+        }
+        
+        .badge-property {
+            background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+            color: white;
+        }
+        
+        .badge-file {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+        }
+        
+        .badge-task {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+        
+        /* Timeline styling */
+        .activity-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .activity-timeline::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #d1d5db, #9ca3af, #d1d5db);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -18px;
+            top: 8px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--emerald-green);
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px var(--emerald-green);
+        }
+        
+        /* User avatar colors */
+        .avatar-maria {
+            background: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
+            color: white;
+        }
+        
+        .avatar-john {
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            color: white;
+        }
+        
+        .avatar-sarah {
+            background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+            color: white;
+        }
+        
+        .avatar-michael {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+        
+        /* Task progress indicator */
+        .task-progress {
+            height: 4px;
+            border-radius: 2px;
+            overflow: hidden;
+            background-color: #e5e7eb;
+        }
+        
+        .task-progress-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Notification styles */
+        .notification-item {
+            border-left: 4px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        .notification-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .notification-urgent {
+            border-left-color: #ef4444;
+        }
+        
+        .notification-upcoming {
+            border-left-color: #f59e0b;
+        }
+        
+        .notification-info {
+            border-left-color: #3b82f6;
+        }
+    </style>
+</head>
+
+<body class="text-gray-800">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="w-72 luxury-sidebar text-white flex flex-col">
+            <!-- Logo -->
+            <div class="p-8 border-b border-white/10 relative">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl gradient-border flex items-center justify-center">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-green to-gold-primary flex items-center justify-center">
+                            <img src="img/atari.png" 
+                                alt="Atari Realty Logo" 
+                                class="w-10 h-10 rounded-lg object-cover">
+                        </div>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black text-white tracking-tight">ATARI</h1>
+                        <p class="text-xs text-white/70 font-medium tracking-wider">REAL ESTATE BROKERAGE</p>
+                    </div>
+                </div>
+                <p class="text-sm text-white/60 mt-4 italic">Your Ultimate Real Estate Partner</p>
+            </div>
+            
+            <!-- Navigation with scroll -->
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <div class="p-6 overflow-y-auto sidebar-scrollbar">
+                    <!-- Main Menu -->
+                    <div class="mb-8">
+                        <h2 class="text-xs uppercase tracking-widest text-gray-400 mb-4 font-poppins font-semibold">MAIN MENU</h2>
+                        <ul class="space-y-0.5">
+                            <li>
+                                <a href="index.html" class="sidebar-menu-item flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-tachometer-alt text-gray-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Dashboard</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="search-engine.html" class="sidebar-menu-item flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-search text-gray-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Search Engine</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="auto-reminders.html" class="sidebar-menu-item active flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-bell text-emerald-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Auto Reminders</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="status-updates.html" class="sidebar-menu-item flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-sync-alt text-gray-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Status Updates</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="document-organizer.html" class="sidebar-menu-item flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-folder text-gray-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Document Organizer</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Tools Section -->
+                    <div class="mb-8">
+                        <h2 class="text-xs uppercase tracking-widest text-gray-400 mb-4 font-poppins font-semibold">TOOLS</h2>
+                        <ul class="space-y-0.5">
+                            <li>
+                                <a href="template-documents.html" class="sidebar-menu-item flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-file-contract text-gray-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Template Documents</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="auto-text-email.html" class="sidebar-menu-item flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-envelope text-gray-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Auto Text/Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="auto-promotion.html" class="sidebar-menu-item flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-bullhorn text-gray-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Auto Promotion</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="connect-apps.html" class="sidebar-menu-item flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-plug text-gray-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Connect Apps</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="developers-update.html" class="sidebar-menu-item flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-code text-gray-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Developer's Update</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="employees-leaderboard.html" class="sidebar-menu-item flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-trophy text-gray-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Leaderboards</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Activity Stats Section -->
+                    <div class="mt-6 mb-6 bg-emerald/10 rounded-xl p-4 border border-emerald/20">
+                        <h3 class="text-sm font-medium font-poppins mb-3 text-emerald">Live Activity Stats</h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-300 font-poppins">Active Tasks</span>
+                                <span class="font-bold font-montserrat text-blue-400">12</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-300 font-poppins">Pending Reminders</span>
+                                <span class="font-bold font-montserrat text-yellow-400">8</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-300 font-poppins">Today's Activities</span>
+                                <span class="font-bold font-montserrat">24</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Connect Apps Section -->
+                    <div class="mb-4">
+                        <h2 class="text-xs uppercase tracking-widest text-gray-400 mb-4 font-poppins font-semibold">CONNECT APPS</h2>
+                        <div class="flex items-center space-x-2">
+                            <button class="bg-emerald/10 text-emerald p-2.5 rounded-lg hover:bg-emerald/20 smooth-transition flex items-center justify-center">
+                                <i class="fab fa-whatsapp text-base"></i>
+                            </button>
+                            <button class="bg-emerald/10 text-emerald p-2.5 rounded-lg hover:bg-emerald/20 smooth-transition flex items-center justify-center">
+                                <i class="fab fa-instagram text-base"></i>
+                            </button>
+                            <button class="bg-emerald/10 text-emerald p-2.5 rounded-lg hover:bg-emerald/20 smooth-transition flex items-center justify-center">
+                                <i class="fab fa-viber text-base"></i>
+                            </button>
+                            <button class="bg-emerald/10 text-emerald p-2.5 rounded-lg hover:bg-emerald/20 smooth-transition flex items-center justify-center">
+                                <i class="fab fa-facebook text-base"></i>
+                            </button>
+                            <button class="bg-emerald/10 text-emerald p-2.5 rounded-lg hover:bg-emerald/20 smooth-transition flex items-center justify-center">
+                                <i class="fas fa-envelope text-base"></i>
+                            </button>
+                            <button class="ml-auto text-gray-400 hover:text-white smooth-transition p-2">
+                                <i class="fas fa-chevron-right text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- User Profile -->
+                <div class="mt-auto p-5 border-t border-emerald/20">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 gold-gradient rounded-full flex items-center justify-center shadow-md">
+                            <span class="font-bold text-white text-base font-montserrat">L</span>
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <p class="font-medium font-poppins text-sm">Lucky</p>
+                            <p class="text-xs text-emerald font-poppins">luxury@atari.com</p>
+                        </div>
+                        <div class="relative">
+                            <button class="w-8 h-8 rounded-full bg-emerald/10 flex items-center justify-center hover:bg-emerald/20 smooth-transition">
+                                <i class="fas fa-sign-out-alt text-emerald text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <div class="bg-white border-b p-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900 font-montserrat">Tasks & Activity Tracking</h1>
+                        <p class="text-gray-600 mt-1 font-poppins">Monitor team activities, track tasks, and view system logs in real-time</p>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <!-- Add Task Button -->
+                        <div class="relative">
+                            <button id="addTaskBtn" class="gold-gradient text-white px-4 py-2.5 rounded-xl font-medium hover:opacity-90 smooth-transition font-poppins">
+                                <i class="fas fa-plus mr-2"></i> Add Task
+                            </button>
+                        </div>
+                        
+                        <!-- Header Icons -->
+                        <div class="flex items-center space-x-3">
+                            <div class="relative">
+                                <button class="w-10 h-10 rounded-xl bg-gold-light text-gold-dark flex items-center justify-center hover:bg-gold/20 smooth-transition">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="relative">
+                                <button class="w-10 h-10 rounded-xl bg-light-green text-emerald flex items-center justify-center hover:bg-emerald/10 smooth-transition">
+                                    <i class="fas fa-envelope"></i>
+                                </button>
+                                <span class="notification-badge">5</span>
+                            </div>
+                            
+                            <div class="relative">
+                                <button class="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-100 smooth-transition">
+                                    <i class="fas fa-bell"></i>
+                                </button>
+                                <span class="notification-badge">8</span>
+                            </div>
+                            
+                            <button class="w-10 h-10 rounded-xl bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 smooth-transition">
+                                <i class="fas fa-cog"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Live Status Bar -->
+                <div class="mt-6 flex items-center text-sm text-gray-600 font-poppins">
+                    <div class="flex items-center bg-blue-50 px-3 py-1.5 rounded-lg">
+                        <span class="live-indicator"></span>
+                        <span class="font-medium">Live Updates Active</span>
+                    </div>
+                    <div class="mx-4 elegant-divider w-8"></div>
+                    <div class="flex items-center">
+                        <i class="fas fa-users text-emerald mr-2"></i>
+                        <span>Active Team Members: <span class="font-medium">8</span></span>
+                    </div>
+                    <div class="mx-4 elegant-divider w-8"></div>
+                    <div class="flex items-center">
+                        <i class="fas fa-history text-gold mr-2"></i>
+                        <span>Today's Activities: <span class="font-medium">24</span></span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Content Area -->
+            <div class="flex-1 overflow-y-auto p-6">
+                <!-- Pending Tasks Section -->
+                <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 card-hover mb-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-900 font-montserrat">4.1 Pending Tasks</h2>
+                        <div class="flex items-center space-x-4">
+                            <div class="relative">
+                                <input type="text" placeholder="Search tasks..." class="pl-10 pr-4 py-2 border rounded-xl w-64 focus:outline-none modern-input font-poppins" id="searchTasks">
+                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            </div>
+                            <button id="refreshTasksBtn" class="bg-emerald/10 text-emerald px-4 py-2 rounded-lg font-medium hover:bg-emerald/20 smooth-transition font-poppins">
+                                <i class="fas fa-sync-alt mr-2"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Live Task Monitoring -->
+                    <div class="mb-6 p-4 bg-blue-50 rounded-xl border border-blue-100">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                                    <i class="fas fa-eye text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-blue-800 font-poppins">Live Task Monitoring Active</p>
+                                    <p class="text-sm text-blue-600 font-poppins">Real-time updates on team activities</p>
+                                </div>
+                            </div>
+                            <div class="text-sm text-blue-700">
+                                <i class="fas fa-clock mr-1"></i>Updated: <span class="font-medium" id="lastUpdateTime">Just now</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Active Tasks Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6" id="activeTasksGrid">
+                        <!-- Active tasks will be dynamically generated here -->
+                    </div>
+                    
+                    <!-- Task Statistics -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+                        <div class="bg-blue-50 p-4 rounded-xl">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-sm text-blue-600 font-poppins">Active Tasks</p>
+                                    <p class="text-2xl font-bold text-blue-900 font-montserrat">12</p>
+                                </div>
+                                <i class="fas fa-tasks text-blue-400 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-xl">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-sm text-green-600 font-poppins">In Progress</p>
+                                    <p class="text-2xl font-bold text-green-900 font-montserrat">8</p>
+                                </div>
+                                <i class="fas fa-spinner text-green-400 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 p-4 rounded-xl">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-sm text-yellow-600 font-poppins">Pending Review</p>
+                                    <p class="text-2xl font-bold text-yellow-900 font-montserrat">3</p>
+                                </div>
+                                <i class="fas fa-clock text-yellow-400 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-xl">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-sm text-purple-600 font-poppins">Completed Today</p>
+                                    <p class="text-2xl font-bold text-purple-900 font-montserrat">9</p>
+                                </div>
+                                <i class="fas fa-check-circle text-purple-400 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Two Column Layout -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Upcoming & Auto Reminders Section -->
+                    <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 card-hover">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-bold text-gray-900 font-montserrat">4.2 Upcoming & Auto Reminders</h2>
+                            <button id="addReminderBtn" class="bg-emerald text-white px-4 py-2 rounded-lg font-medium hover:bg-emerald/90 smooth-transition font-poppins">
+                                <i class="fas fa-plus mr-2"></i> Add Reminder
+                            </button>
+                        </div>
+                        
+                        <!-- Status Indicator -->
+                        <div class="mb-6 p-3 bg-green-50 rounded-lg border border-green-200">
+                            <div class="flex items-center">
+                                <div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center mr-3">
+                                    <i class="fas fa-check text-white text-xs"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-green-800 font-poppins">Auto Reminders Active</p>
+                                    <p class="text-sm text-green-600 font-poppins">Real-time notifications for all team members</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Reminder Categories -->
+                        <div class="mb-6 grid grid-cols-3 gap-4">
+                            <div class="text-center p-3 bg-blue-50 rounded-lg">
+                                <i class="fas fa-file-contract text-blue-500 text-xl mb-2"></i>
+                                <p class="text-sm font-medium text-blue-800 font-poppins">Transactions</p>
+                                <p class="text-xs text-blue-600">6 pending</p>
+                            </div>
+                            <div class="text-center p-3 bg-purple-50 rounded-lg">
+                                <i class="fas fa-calendar-alt text-purple-500 text-xl mb-2"></i>
+                                <p class="text-sm font-medium text-purple-800 font-poppins">Meetings</p>
+                                <p class="text-xs text-purple-600">4 scheduled</p>
+                            </div>
+                            <div class="text-center p-3 bg-yellow-50 rounded-lg">
+                                <i class="fas fa-hard-hat text-yellow-500 text-xl mb-2"></i>
+                                <p class="text-sm font-medium text-yellow-800 font-poppins">Progress</p>
+                                <p class="text-xs text-yellow-600">3 updates</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Reminders List -->
+                        <div class="space-y-4 max-h-96 overflow-y-auto pr-2" id="remindersList">
+                            <!-- Reminders will be dynamically generated here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Activity Logs Section -->
+                    <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 card-hover">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-bold text-gray-900 font-montserrat">4.3 Recent Activity Logs</h2>
+                            <div class="flex items-center space-x-2">
+                                <button id="exportLogsBtn" class="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg font-medium hover:bg-gray-200 smooth-transition font-poppins">
+                                    <i class="fas fa-download mr-2"></i> Export
+                                </button>
+                                <button id="filterLogsBtn" class="bg-emerald/10 text-emerald px-4 py-2 rounded-lg font-medium hover:bg-emerald/20 smooth-transition font-poppins">
+                                    <i class="fas fa-filter mr-2"></i> Filter
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Activity Stats -->
+                        <div class="mb-6 grid grid-cols-4 gap-3">
+                            <div class="text-center p-2 bg-gray-50 rounded-lg">
+                                <p class="text-xs text-gray-500">Today</p>
+                                <p class="font-bold text-gray-900">24</p>
+                            </div>
+                            <div class="text-center p-2 bg-gray-50 rounded-lg">
+                                <p class="text-xs text-gray-500">This Week</p>
+                                <p class="font-bold text-gray-900">156</p>
+                            </div>
+                            <div class="text-center p-2 bg-gray-50 rounded-lg">
+                                <p class="text-xs text-gray-500">System</p>
+                                <p class="font-bold text-gray-900">42</p>
+                            </div>
+                            <div class="text-center p-2 bg-gray-50 rounded-lg">
+                                <p class="text-xs text-gray-500">Users</p>
+                                <p class="font-bold text-gray-900">8</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Activity Timeline -->
+                        <div class="activity-timeline max-h-96 overflow-y-auto pr-2" id="activityTimeline">
+                            <!-- Activity logs will be dynamically generated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Task Modal -->
+    <div id="addTaskModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-gray-900 font-montserrat">Add New Task</h3>
+                    <button onclick="closeModal('addTaskModal')" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <form id="taskForm">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Task Title *</label>
+                            <input type="text" required class="w-full border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins" placeholder="What needs to be done?">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Assigned To *</label>
+                            <select required class="w-full border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins">
+                                <option value="">Select Team Member</option>
+                                <option value="maria">Maria Rodriguez</option>
+                                <option value="john">John Smith</option>
+                                <option value="sarah">Sarah Johnson</option>
+                                <option value="michael">Michael Brown</option>
+                                <option value="emma">Emma Wilson</option>
+                            </select>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Due Date</label>
+                                <input type="date" class="w-full border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Priority</label>
+                                <select class="w-full border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins">
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Description</label>
+                            <textarea class="w-full border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins" rows="3" placeholder="Task details and instructions..."></textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Category</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button type="button" class="badge-document py-2 rounded-lg font-medium smooth-transition font-poppins text-center">Document</button>
+                                <button type="button" class="badge-meeting py-2 rounded-lg font-medium smooth-transition font-poppins text-center">Meeting</button>
+                                <button type="button" class="badge-property py-2 rounded-lg font-medium smooth-transition font-poppins text-center">Property</button>
+                                <button type="button" class="badge-task py-2 rounded-lg font-medium smooth-transition font-poppins text-center">Task</button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end space-x-4 pt-4">
+                            <button type="button" onclick="closeModal('addTaskModal')" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">
+                                Cancel
+                            </button>
+                            <button type="submit" class="gold-gradient text-white px-6 py-2 rounded-xl font-medium hover:opacity-90 smooth-transition font-poppins">
+                                Create Task
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Reminder Modal -->
+    <div id="addReminderModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-gray-900 font-montserrat">Add Auto Reminder</h3>
+                    <button onclick="closeModal('addReminderModal')" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <form id="reminderForm">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Reminder Type *</label>
+                            <select required class="w-full border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins">
+                                <option value="">Select Type</option>
+                                <option value="transaction">Transaction</option>
+                                <option value="meeting">Meeting</option>
+                                <option value="progress">Building Progress</option>
+                                <option value="deadline">Deadline</option>
+                                <option value="followup">Follow-up</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Title *</label>
+                            <input type="text" required class="w-full border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins" placeholder="Reminder title">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Notify Users *</label>
+                            <div class="space-y-2">
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="user1" class="mr-2">
+                                    <label for="user1" class="font-poppins">Maria Rodriguez</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="user2" class="mr-2">
+                                    <label for="user2" class="font-poppins">John Smith</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="user3" class="mr-2">
+                                    <label for="user3" class="font-poppins">Sarah Johnson</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="user4" class="mr-2" checked>
+                                    <label for="user4" class="font-poppins">All Team Members</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Date</label>
+                                <input type="date" class="w-full border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Time</label>
+                                <input type="time" class="w-full border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Repeat</label>
+                            <select class="w-full border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins">
+                                <option value="none">Never</option>
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Notes</label>
+                            <textarea class="w-full border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins" rows="3" placeholder="Additional notes..."></textarea>
+                        </div>
+                        
+                        <div class="flex justify-end space-x-4 pt-4">
+                            <button type="button" onclick="closeModal('addReminderModal')" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">
+                                Cancel
+                            </button>
+                            <button type="submit" class="gold-gradient text-white px-6 py-2 rounded-xl font-medium hover:opacity-90 smooth-transition font-poppins">
+                                Set Reminder
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Sample data
+        const activeTasks = [
+            {
+                id: 1,
+                user: "Maria Rodriguez",
+                avatar: "M",
+                avatarClass: "avatar-maria",
+                task: "Working on contract paperwork",
+                status: "working",
+                statusText: "In Progress",
+                progress: 65,
+                category: "document",
+                time: "Active now",
+                updated: "2 min ago"
+            },
+            {
+                id: 2,
+                user: "John Smith",
+                avatar: "J",
+                avatarClass: "avatar-john",
+                task: "Preparing property valuation report",
+                status: "review",
+                statusText: "Under Review",
+                progress: 90,
+                category: "document",
+                time: "Last active: 5 min ago",
+                updated: "10 min ago"
+            },
+            {
+                id: 3,
+                user: "Sarah Johnson",
+                avatar: "S",
+                avatarClass: "avatar-sarah",
+                task: "Client meeting preparation",
+                status: "working",
+                statusText: "In Progress",
+                progress: 40,
+                category: "meeting",
+                time: "Active now",
+                updated: "Just now"
+            },
+            {
+                id: 4,
+                user: "Michael Brown",
+                avatar: "M",
+                avatarClass: "avatar-michael",
+                task: "Uploading new property photos",
+                status: "complete",
+                statusText: "Completed",
+                progress: 100,
+                category: "property",
+                time: "Completed",
+                updated: "15 min ago"
+            },
+            {
+                id: 5,
+                user: "Emma Wilson",
+                avatar: "E",
+                avatarClass: "avatar-maria",
+                task: "Processing client documentation",
+                status: "pending",
+                statusText: "Pending Start",
+                progress: 10,
+                category: "document",
+                time: "Scheduled for today",
+                updated: "30 min ago"
+            },
+            {
+                id: 6,
+                user: "David Lee",
+                avatar: "D",
+                avatarClass: "avatar-john",
+                task: "Site inspection coordination",
+                status: "working",
+                statusText: "In Progress",
+                progress: 75,
+                category: "property",
+                time: "Active now",
+                updated: "5 min ago"
+            }
+        ];
+
+        const reminders = [
+            {
+                id: 1,
+                type: "transaction",
+                title: "Contract signing deadline",
+                date: "Today, 3:00 PM",
+                priority: "high",
+                users: ["All Team"],
+                notified: true
+            },
+            {
+                id: 2,
+                type: "meeting",
+                title: "Client presentation meeting",
+                date: "Tomorrow, 10:00 AM",
+                priority: "high",
+                users: ["Maria", "John"],
+                notified: false
+            },
+            {
+                id: 3,
+                type: "progress",
+                title: "Construction site inspection",
+                date: "Friday, 2:00 PM",
+                priority: "medium",
+                users: ["Michael", "Sarah"],
+                notified: true
+            },
+            {
+                id: 4,
+                type: "deadline",
+                title: "Property tax submission",
+                date: "Jan 20, 5:00 PM",
+                priority: "medium",
+                users: ["Emma"],
+                notified: false
+            },
+            {
+                id: 5,
+                type: "followup",
+                title: "Follow up with potential buyer",
+                date: "Today, 4:30 PM",
+                priority: "low",
+                users: ["David"],
+                notified: true
+            }
+        ];
+
+        const activityLogs = [
+            {
+                id: 1,
+                type: "document",
+                title: "Contract uploaded",
+                user: "Maria Rodriguez",
+                time: "10:30 AM",
+                details: "Purchase agreement for Beverly Hills property"
+            },
+            {
+                id: 2,
+                type: "meeting",
+                title: "Client meeting completed",
+                user: "John Smith",
+                time: "11:15 AM",
+                details: "Meeting with Johnson family regarding Park Ave penthouse"
+            },
+            {
+                id: 3,
+                type: "property",
+                title: "New property uploaded",
+                user: "Sarah Johnson",
+                time: "12:45 PM",
+                details: "Miami Beachfront Villa added to listings"
+            },
+            {
+                id: 4,
+                type: "file",
+                title: "New storage file added",
+                user: "Michael Brown",
+                time: "1:30 PM",
+                details: "Added property inspection reports to shared drive"
+            },
+            {
+                id: 5,
+                type: "document",
+                title: "Updated property documents",
+                user: "Emma Wilson",
+                time: "2:15 PM",
+                details: "Revised contracts for Lake Tahoe property"
+            },
+            {
+                id: 6,
+                type: "meeting",
+                title: "Team meeting scheduled",
+                user: "Admin",
+                time: "3:00 PM",
+                details: "Weekly team meeting scheduled for Friday"
+            },
+            {
+                id: 7,
+                type: "property",
+                title: "Property status updated",
+                user: "David Lee",
+                time: "3:45 PM",
+                details: "Changed status of Downtown Loft from vacant to pending"
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the page
+            renderActiveTasks();
+            renderReminders();
+            renderActivityLogs();
+            
+            // Update time display
+            updateLastUpdateTime();
+            
+            // Add Task button
+            const addTaskBtn = document.getElementById('addTaskBtn');
+            if (addTaskBtn) {
+                addTaskBtn.addEventListener('click', function() {
+                    openModal('addTaskModal');
+                });
+            }
+            
+            // Add Reminder button
+            const addReminderBtn = document.getElementById('addReminderBtn');
+            if (addReminderBtn) {
+                addReminderBtn.addEventListener('click', function() {
+                    openModal('addReminderModal');
+                });
+            }
+            
+            // Refresh Tasks button
+            const refreshTasksBtn = document.getElementById('refreshTasksBtn');
+            if (refreshTasksBtn) {
+                refreshTasksBtn.addEventListener('click', function() {
+                    refreshTasks();
+                });
+            }
+            
+            // Export Logs button
+            const exportLogsBtn = document.getElementById('exportLogsBtn');
+            if (exportLogsBtn) {
+                exportLogsBtn.addEventListener('click', function() {
+                    alert('📊 Exporting Activity Logs\n\nDownloading system-wide activity history as CSV file.');
+                });
+            }
+            
+            // Filter Logs button
+            const filterLogsBtn = document.getElementById('filterLogsBtn');
+            if (filterLogsBtn) {
+                filterLogsBtn.addEventListener('click', function() {
+                    alert('🔍 Filter Activity Logs\n\nOpening filter options for system activity history.');
+                });
+            }
+            
+            // Search functionality
+            const searchTasks = document.getElementById('searchTasks');
+            if (searchTasks) {
+                searchTasks.addEventListener('input', function() {
+                    filterTasks(this.value);
+                });
+            }
+            
+            // Task Form submission
+            const taskForm = document.getElementById('taskForm');
+            if (taskForm) {
+                taskForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('✅ Task Created Successfully!\n\nYour new task has been added and team members will be notified.');
+                    closeModal('addTaskModal');
+                    
+                    // Add to activity logs
+                    addActivityLog({
+                        type: 'task',
+                        title: 'New task created',
+                        user: 'You',
+                        time: 'Just now',
+                        details: 'New task added to the system'
+                    });
+                    
+                    renderActivityLogs();
+                });
+            }
+            
+            // Reminder Form submission
+            const reminderForm = document.getElementById('reminderForm');
+            if (reminderForm) {
+                reminderForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('✅ Auto Reminder Set!\n\nReminder has been scheduled and notifications will be sent to concerned users.');
+                    closeModal('addReminderModal');
+                });
+            }
+            
+            // Simulate live updates
+            setInterval(() => {
+                simulateLiveUpdates();
+            }, 30000); // Update every 30 seconds
+            
+            // Initial live update after 5 seconds
+            setTimeout(() => {
+                simulateLiveUpdates();
+            }, 5000);
+        });
+        
+        function renderActiveTasks() {
+            const container = document.getElementById('activeTasksGrid');
+            container.innerHTML = '';
+            
+            activeTasks.forEach(task => {
+                const statusClass = task.status === 'working' ? 'status-working' :
+                                  task.status === 'review' ? 'status-review' :
+                                  task.status === 'complete' ? 'status-complete' :
+                                  'status-pending';
+                
+                const categoryClass = task.category === 'document' ? 'badge-document' :
+                                    task.category === 'meeting' ? 'badge-meeting' :
+                                    task.category === 'property' ? 'badge-property' :
+                                    'badge-task';
+                
+                const taskCard = document.createElement('div');
+                taskCard.className = 'bg-white border border-gray-200 rounded-2xl overflow-hidden card-hover';
+                taskCard.innerHTML = `
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 ${task.avatarClass} rounded-full flex items-center justify-center font-bold text-white mr-3">
+                                    ${task.avatar}
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-900 font-montserrat">${task.user}</h3>
+                                    <p class="text-sm text-gray-500 font-poppins">${task.time}</p>
+                                </div>
+                            </div>
+                            <span class="text-xs ${statusClass} px-3 py-1 rounded-full font-medium">${task.statusText}</span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="font-medium text-gray-800 font-poppins mb-2">
+                                <i class="fas fa-tasks text-emerald mr-2"></i>
+                                ${task.task}
+                            </p>
+                            <span class="text-xs ${categoryClass} px-2 py-1 rounded">${task.category.charAt(0).toUpperCase() + task.category.slice(1)}</span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-gray-600 font-poppins">Progress</span>
+                                <span class="text-sm font-medium text-emerald font-poppins">${task.progress}%</span>
+                            </div>
+                            <div class="task-progress">
+                                <div class="task-progress-fill bg-emerald" style="width: ${task.progress}%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                            <button onclick="updateTaskStatus(${task.id})" class="text-emerald hover:text-emerald/80 font-medium text-sm font-poppins">
+                                <i class="fas fa-edit mr-1"></i> Update
+                            </button>
+                            <div class="text-sm text-gray-500">
+                                <i class="fas fa-clock mr-1"></i>${task.updated}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(taskCard);
+            });
+        }
+        
+        function renderReminders() {
+            const container = document.getElementById('remindersList');
+            container.innerHTML = '';
+            
+            reminders.forEach(reminder => {
+                const priorityClass = reminder.priority === 'high' ? 'notification-urgent' :
+                                    reminder.priority === 'medium' ? 'notification-upcoming' :
+                                    'notification-info';
+                
+                const priorityColor = reminder.priority === 'high' ? 'text-red-600' :
+                                    reminder.priority === 'medium' ? 'text-yellow-600' :
+                                    'text-blue-600';
+                
+                const typeIcon = reminder.type === 'transaction' ? 'fa-file-contract' :
+                               reminder.type === 'meeting' ? 'fa-calendar-alt' :
+                               reminder.type === 'progress' ? 'fa-hard-hat' :
+                               reminder.type === 'deadline' ? 'fa-clock' :
+                               'fa-bell';
+                
+                const reminderItem = document.createElement('div');
+                reminderItem.className = `notification-item ${priorityClass} bg-gray-50 p-4 rounded-lg smooth-transition`;
+                reminderItem.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="w-10 h-10 bg-emerald/10 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas ${typeIcon} text-emerald"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start">
+                                <h4 class="font-medium text-gray-900 font-poppins">${reminder.title}</h4>
+                                <span class="text-xs font-medium ${priorityColor}">${reminder.priority.toUpperCase()}</span>
+                            </div>
+                            <p class="text-sm text-gray-600 font-poppins mt-1">
+                                <i class="fas fa-calendar-day mr-2"></i>${reminder.date}
+                            </p>
+                            <div class="flex items-center mt-2">
+                                <i class="fas fa-users text-gray-400 text-sm mr-2"></i>
+                                <span class="text-xs text-gray-500 font-poppins">${reminder.users.join(', ')}</span>
+                                ${reminder.notified ? '<span class="ml-2 text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Notified</span>' : ''}
+                            </div>
+                        </div>
+                        <button onclick="dismissReminder(${reminder.id})" class="ml-2 text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(reminderItem);
+            });
+        }
+        
+        function renderActivityLogs() {
+            const container = document.getElementById('activityTimeline');
+            container.innerHTML = '';
+            
+            activityLogs.forEach(log => {
+                const badgeClass = log.type === 'document' ? 'badge-document' :
+                                 log.type === 'meeting' ? 'badge-meeting' :
+                                 log.type === 'property' ? 'badge-property' :
+                                 log.type === 'file' ? 'badge-file' :
+                                 'badge-task';
+                
+                const icon = log.type === 'document' ? 'fa-file-alt' :
+                           log.type === 'meeting' ? 'fa-calendar-check' :
+                           log.type === 'property' ? 'fa-home' :
+                           log.type === 'file' ? 'fa-folder-plus' :
+                           'fa-tasks';
+                
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'timeline-item';
+                timelineItem.innerHTML = `
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <div class="flex justify-between items-start mb-2">
+                            <div class="flex items-center">
+                                <span class="text-xs ${badgeClass} px-2 py-1 rounded mr-2">
+                                    <i class="fas ${icon} mr-1"></i>${log.type.charAt(0).toUpperCase() + log.type.slice(1)}
+                                </span>
+                                <span class="font-medium text-gray-900 font-poppins">${log.title}</span>
+                            </div>
+                            <span class="text-sm text-gray-500 font-poppins">${log.time}</span>
+                        </div>
+                        <p class="text-sm text-gray-600 font-poppins">
+                            <i class="fas fa-user mr-1"></i>${log.user}
+                        </p>
+                        <p class="text-sm text-gray-500 mt-1">${log.details}</p>
+                    </div>
+                `;
+                container.appendChild(timelineItem);
+            });
+        }
+        
+        function updateTaskStatus(taskId) {
+            const task = activeTasks.find(t => t.id === taskId);
+            if (task) {
+                alert(`🔄 Update Task: ${task.user}\n\nCurrent task: ${task.task}\n\nStatus: ${task.statusText}\n\nProgress: ${task.progress}%\n\nOpening update dialog...`);
+            }
+        }
+        
+        function dismissReminder(reminderId) {
+            const reminder = reminders.find(r => r.id === reminderId);
+            if (reminder && confirm(`Dismiss reminder: "${reminder.title}"?`)) {
+                // Remove from array
+                const index = reminders.findIndex(r => r.id === reminderId);
+                if (index > -1) {
+                    reminders.splice(index, 1);
+                    renderReminders();
+                    alert('Reminder dismissed!');
+                }
+            }
+        }
+        
+        function refreshTasks() {
+            // Simulate refreshing tasks
+            document.getElementById('refreshTasksBtn').innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Refreshing...';
+            
+            setTimeout(() => {
+                // Update last update time
+                updateLastUpdateTime();
+                
+                // Reset button
+                document.getElementById('refreshTasksBtn').innerHTML = '<i class="fas fa-sync-alt mr-2"></i> Refresh';
+                
+                // Show success message
+                alert('✅ Tasks Refreshed!\n\nLive task monitoring updated with latest data.');
+                
+                // Add to activity logs
+                addActivityLog({
+                    type: 'task',
+                    title: 'Tasks refreshed',
+                    user: 'System',
+                    time: 'Just now',
+                    details: 'Live task monitoring data refreshed'
+                });
+                
+                renderActivityLogs();
+            }, 1000);
+        }
+        
+        function updateLastUpdateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('lastUpdateTime').textContent = timeString;
+        }
+        
+        function addActivityLog(log) {
+            // Add to beginning of array
+            activityLogs.unshift(log);
+            
+            // Keep only last 10 items
+            if (activityLogs.length > 10) {
+                activityLogs.pop();
+            }
+        }
+        
+        function simulateLiveUpdates() {
+            // Simulate random task progress updates
+            activeTasks.forEach(task => {
+                if (task.status === 'working' && task.progress < 100) {
+                    task.progress += Math.floor(Math.random() * 10);
+                    if (task.progress > 100) task.progress = 100;
+                    task.updated = 'Just now';
+                }
+            });
+            
+            // Update a random task status
+            const randomTask = activeTasks[Math.floor(Math.random() * activeTasks.length)];
+            if (randomTask.progress >= 100 && randomTask.status !== 'complete') {
+                randomTask.status = 'complete';
+                randomTask.statusText = 'Completed';
+                randomTask.time = 'Completed';
+                
+                // Add to activity logs
+                addActivityLog({
+                    type: 'task',
+                    title: 'Task completed',
+                    user: randomTask.user,
+                    time: 'Just now',
+                    details: `Completed: ${randomTask.task}`
+                });
+            }
+            
+            // Update display
+            renderActiveTasks();
+            updateLastUpdateTime();
+            
+            // Show notification for new activity
+            if (Math.random() > 0.5) {
+                const activities = [
+                    'New document uploaded by team member',
+                    'Property status updated',
+                    'Client meeting scheduled',
+                    'Task completed by team member'
+                ];
+                const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+                
+                // Add to activity logs
+                addActivityLog({
+                    type: 'system',
+                    title: 'System update',
+                    user: 'Auto Update',
+                    time: 'Just now',
+                    details: randomActivity
+                });
+                
+                renderActivityLogs();
+            }
+        }
+        
+        function filterTasks(searchTerm) {
+            if (!searchTerm) {
+                renderActiveTasks();
+                return;
+            }
+            
+            const filtered = activeTasks.filter(task => 
+                task.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                task.task.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                task.statusText.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            
+            const container = document.getElementById('activeTasksGrid');
+            container.innerHTML = '';
+            
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-3 text-center py-8">
+                        <i class="fas fa-search text-gray-300 text-4xl mb-4"></i>
+                        <p class="text-gray-500 font-poppins">No tasks found matching "${searchTerm}"</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filtered.forEach(task => {
+                const statusClass = task.status === 'working' ? 'status-working' :
+                                  task.status === 'review' ? 'status-review' :
+                                  task.status === 'complete' ? 'status-complete' :
+                                  'status-pending';
+                
+                const categoryClass = task.category === 'document' ? 'badge-document' :
+                                    task.category === 'meeting' ? 'badge-meeting' :
+                                    task.category === 'property' ? 'badge-property' :
+                                    'badge-task';
+                
+                const taskCard = document.createElement('div');
+                taskCard.className = 'bg-white border border-gray-200 rounded-2xl overflow-hidden card-hover';
+                taskCard.innerHTML = `
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 ${task.avatarClass} rounded-full flex items-center justify-center font-bold text-white mr-3">
+                                    ${task.avatar}
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-900 font-montserrat">${task.user}</h3>
+                                    <p class="text-sm text-gray-500 font-poppins">${task.time}</p>
+                                </div>
+                            </div>
+                            <span class="text-xs ${statusClass} px-3 py-1 rounded-full font-medium">${task.statusText}</span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="font-medium text-gray-800 font-poppins mb-2">
+                                <i class="fas fa-tasks text-emerald mr-2"></i>
+                                ${task.task}
+                            </p>
+                            <span class="text-xs ${categoryClass} px-2 py-1 rounded">${task.category.charAt(0).toUpperCase() + task.category.slice(1)}</span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-gray-600 font-poppins">Progress</span>
+                                <span class="text-sm font-medium text-emerald font-poppins">${task.progress}%</span>
+                            </div>
+                            <div class="task-progress">
+                                <div class="task-progress-fill bg-emerald" style="width: ${task.progress}%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                            <button onclick="updateTaskStatus(${task.id})" class="text-emerald hover:text-emerald/80 font-medium text-sm font-poppins">
+                                <i class="fas fa-edit mr-1"></i> Update
+                            </button>
+                            <div class="text-sm text-gray-500">
+                                <i class="fas fa-clock mr-1"></i>${task.updated}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(taskCard);
+            });
+        }
+        
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal-overlay')) {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

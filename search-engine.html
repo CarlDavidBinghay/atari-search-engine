@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATARI | Advanced Property Search Engine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --luxury-green: #0a3d2e;
+            --emerald-green: #10b981;
+            --light-green: #ecfdf5;
+            --gold-primary: #d4af37;
+            --gold-light: #fef3c7;
+            --gold-dark: #b45309;
+            --pure-white: #ffffff;
+            --bg-gray: #f8fafc;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --primary-gradient: linear-gradient(135deg, var(--gold-primary) 0%, var(--emerald-green) 100%);
+            --secondary-gradient: linear-gradient(135deg, var(--luxury-green) 0%, var(--emerald-green) 100%);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-gray);
+        }
+        
+        .font-montserrat {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .font-poppins {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .luxury-sidebar {
+            background: var(--luxury-green);
+        }
+        
+        .sidebar-gradient {
+            background: var(--secondary-gradient);
+        }
+        
+        .gold-gradient {
+            background: var(--primary-gradient);
+        }
+        
+        .text-emerald {
+            color: var(--emerald-green);
+        }
+        
+        .bg-emerald {
+            background-color: var(--emerald-green);
+        }
+        
+        .text-gold {
+            color: var(--gold-primary);
+        }
+        
+        .bg-gold {
+            background-color: var(--gold-primary);
+        }
+        
+        .bg-light-green {
+            background-color: var(--light-green);
+        }
+        
+        .bg-gold-light {
+            background-color: var(--gold-light);
+        }
+        
+        .border-emerald {
+            border-color: var(--emerald-green);
+        }
+        
+        .border-gold {
+            border-color: var(--gold-primary);
+        }
+        
+        /* Custom scrollbar */
+        .sidebar-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        .sidebar-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .sidebar-scrollbar::-webkit-scrollbar-thumb {
+            background: var(--gold-primary);
+            border-radius: 10px;
+        }
+        
+        /* Card hover effects */
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+        }
+        
+        /* Notification badge */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            background-color: #ef4444;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        
+        /* Elegant divider */
+        .elegant-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+        }
+        
+        /* Smooth animations */
+        .smooth-transition {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Modern input focus */
+        .modern-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+            border-color: var(--emerald-green);
+        }
+        
+        /* Sidebar menu item hover effect */
+        .sidebar-menu-item {
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-menu-item:hover {
+            background-color: rgba(16, 185, 129, 0.1);
+            border-left-color: var(--emerald-green);
+        }
+        
+        .sidebar-menu-item.active {
+            background-color: rgba(16, 185, 129, 0.15);
+            border-left-color: var(--emerald-green);
+        }
+        
+        /* Autocomplete dropdown */
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .autocomplete-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .autocomplete-item:hover {
+            background-color: #f3f4f6;
+        }
+        
+        /* Map container */
+        #propertyMap {
+            height: 400px;
+            width: 100%;
+            border-radius: 1rem;
+            z-index: 1;
+        }
+        
+        /* Comparison modal */
+        .comparison-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .comparison-content {
+            background: white;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        /* Property comparison table */
+        .comparison-table th, .comparison-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .mobile-hidden {
+                display: none;
+            }
+            
+            .mobile-full {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body class="text-gray-800">
+    <!-- Modals Container -->
+    <div id="modals-container"></div>
+    
+    <!-- Notification Center Modal -->
+    <div id="notification-modal" class="modal-overlay hidden">
+        <div class="modal-content w-full max-w-2xl">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 font-montserrat">Notification Center</h2>
+                    <button onclick="closeModal('notification-modal')" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900 font-poppins">Notification Rules</h3>
+                        <span class="text-xs bg-emerald text-white px-3 py-1 rounded-full font-medium">Active</span>
+                    </div>
+                    <div class="bg-gray-50 rounded-xl p-4 mb-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2 font-poppins">Admin & Agents</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li class="flex items-center">
+                                        <i class="fas fa-bell text-emerald mr-2 text-xs"></i>
+                                        <span>Always notified on new deals</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-bell text-emerald mr-2 text-xs"></i>
+                                        <span>Always notified on updates</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-bell text-emerald mr-2 text-xs"></i>
+                                        <span>Always notified on actions</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2 font-poppins">Clients (Lessor/Lessee)</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li class="flex items-center">
+                                        <i class="fas fa-bell text-gold mr-2 text-xs"></i>
+                                        <span>Notified once per deal</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-bell text-gold mr-2 text-xs"></i>
+                                        <span>Notified once per update</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-bell text-gold mr-2 text-xs"></i>
+                                        <span>Single notification per action</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Notification Types -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900 font-poppins mb-4">Recent Notifications</h3>
+                    <div class="space-y-3" id="notification-list">
+                        <!-- Notifications will be dynamically inserted here -->
+                    </div>
+                </div>
+                
+                <!-- Notification Logs -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 font-poppins mb-4">Notification Logs</h3>
+                    <div class="bg-gray-50 rounded-xl p-4">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-sm text-gray-600 font-poppins">Total notifications stored: <span id="notification-count" class="font-bold">12</span></span>
+                            <button onclick="clearNotificationLogs()" class="text-xs text-red-600 hover:text-red-800 font-poppins">
+                                <i class="fas fa-trash mr-1"></i> Clear Logs
+                            </button>
+                        </div>
+                        <div class="text-xs text-gray-500 font-poppins">
+                            <p>• Logs are stored for auditing and tracking purposes</p>
+                            <p>• Each notification includes timestamp, type, recipient, and status</p>
+                            <p>• Logs are retained for 90 days</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Messages Modal -->
+    <div id="messages-modal" class="modal-overlay hidden">
+        <div class="modal-content w-full max-w-4xl">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 font-montserrat">Messages & Communication</h2>
+                    <div class="flex items-center space-x-4">
+                        <button onclick="openMessageComposer()" class="bg-emerald text-white px-4 py-2 rounded-lg font-medium hover:bg-emerald/90 smooth-transition font-poppins">
+                            <i class="fas fa-plus mr-2"></i> New Message
+                        </button>
+                        <button onclick="closeModal('messages-modal')" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Conversation List -->
+                    <div class="lg:col-span-1">
+                        <div class="mb-4">
+                            <h3 class="font-semibold text-gray-900 font-poppins mb-3">Conversations</h3>
+                            <div class="space-y-2" id="conversation-list">
+                                <!-- Conversations will be dynamically inserted here -->
+                            </div>
+                        </div>
+                        
+                        <div class="border-t pt-4">
+                            <h3 class="font-semibold text-gray-900 font-poppins mb-3">Message Status Indicators</h3>
+                            <div class="space-y-2">
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 rounded-full bg-emerald mr-2"></div>
+                                    <span class="text-sm text-gray-600">Read by recipient</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 rounded-full bg-gold mr-2"></div>
+                                    <span class="text-sm text-gray-600">Unread by recipient</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
+                                    <span class="text-sm text-gray-600">Edited after sending</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Message Thread -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-gray-50 rounded-xl p-4 h-96 overflow-y-auto mb-4">
+                            <div class="space-y-4" id="message-thread">
+                                <!-- Messages will be dynamically inserted here -->
+                            </div>
+                        </div>
+                        
+                        <div class="border-t pt-4">
+                            <h3 class="font-semibold text-gray-900 font-poppins mb-3">Message History & Logs</h3>
+                            <div class="bg-white border rounded-xl p-4">
+                                <div class="text-sm text-gray-600 space-y-2">
+                                    <p><i class="fas fa-history text-emerald mr-2"></i> All messages are backed up for safety and auditing</p>
+                                    <p><i class="fas fa-eye text-gold mr-2"></i> System tracks who opened each message</p>
+                                    <p><i class="fas fa-edit text-blue-500 mr-2"></i> Edits to files/documents are logged with user info</p>
+                                    <p><i class="fas fa-shield-alt text-purple-500 mr-2"></i> Supports both internal and client communication</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Message Composer Modal -->
+    <div id="composer-modal" class="modal-overlay hidden">
+        <div class="modal-content w-full max-w-3xl">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 font-montserrat">Compose Message</h2>
+                    <button onclick="closeModal('composer-modal')" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-6">
+                    <!-- Recipient Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Recipient Selection</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <select id="recipient-type" class="w-full border rounded-lg p-3 modern-input font-poppins" onchange="updateRecipientOptions()">
+                                    <option value="individual">Individual User</option>
+                                    <option value="group">Group</option>
+                                    <option value="role">By Role</option>
+                                </select>
+                            </div>
+                            <div>
+                                <select id="recipient-select" class="w-full border rounded-lg p-3 modern-input font-poppins">
+                                    <!-- Options will be dynamically populated -->
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Group Categories -->
+                        <div id="group-categories" class="mt-4 hidden">
+                            <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Group Categories</label>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="selectGroup('A')" class="group-category-btn bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg smooth-transition font-poppins">Group A</button>
+                                <button onclick="selectGroup('B')" class="group-category-btn bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg smooth-transition font-poppins">Group B</button>
+                                <button onclick="selectGroup('C')" class="group-category-btn bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg smooth-transition font-poppins">Group C</button>
+                                <button onclick="selectGroup('D')" class="group-category-btn bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg smooth-transition font-poppins">Group D</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Template Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Template Documents</label>
+                        <div class="flex items-center space-x-4">
+                            <select id="template-select" class="flex-1 border rounded-lg p-3 modern-input font-poppins">
+                                <option value="">Select a template...</option>
+                                <option value="property_listing">Property Listing Template</option>
+                                <option value="contract_review">Contract Review Template</option>
+                                <option value="meeting_invite">Meeting Invitation Template</option>
+                                <option value="deal_update">Deal Update Template</option>
+                                <option value="custom">Custom Message</option>
+                            </select>
+                            <button onclick="previewTemplate()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-3 rounded-lg smooth-transition font-poppins">
+                                <i class="fas fa-eye mr-2"></i> Preview
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Message Content -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Message Content</label>
+                        <textarea id="message-content" rows="6" class="w-full border rounded-lg p-3 modern-input font-poppins" placeholder="Type your message here..."></textarea>
+                    </div>
+                    
+                    <!-- Live Preview -->
+                    <div id="live-preview" class="hidden">
+                        <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Live Preview</label>
+                        <div class="bg-gray-50 border rounded-lg p-4">
+                            <div id="preview-content" class="text-gray-700"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Send Options -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Send Via</label>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <button onclick="selectSendMethod('email')" class="send-method-btn bg-blue-50 hover:bg-blue-100 text-blue-700 p-4 rounded-lg smooth-transition font-poppins flex items-center justify-center">
+                                <i class="fas fa-envelope text-xl mr-2"></i> Email
+                            </button>
+                            <button onclick="selectSendMethod('sms')" class="send-method-btn bg-green-50 hover:bg-green-100 text-green-700 p-4 rounded-lg smooth-transition font-poppins flex items-center justify-center">
+                                <i class="fas fa-sms text-xl mr-2"></i> Auto-Text (SMS)
+                            </button>
+                            <button onclick="selectSendMethod('whatsapp')" class="send-method-btn bg-emerald/10 hover:bg-emerald/20 text-emerald p-4 rounded-lg smooth-transition font-poppins flex items-center justify-center">
+                                <i class="fab fa-whatsapp text-xl mr-2"></i> WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex justify-end space-x-4 pt-6 border-t">
+                        <button onclick="closeModal('composer-modal')" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 smooth-transition font-poppins">
+                            Cancel
+                        </button>
+                        <button onclick="sendMessage()" class="gold-gradient text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 smooth-transition font-poppins">
+                            <i class="fas fa-paper-plane mr-2"></i> Send Message
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="w-72 luxury-sidebar text-white flex flex-col mobile-hidden">
+            <!-- Logo -->
+            <div class="p-8 border-b border-white/10 relative">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl gradient-border flex items-center justify-center">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-green to-gold-primary flex items-center justify-center">
+                            <img src="img/atari.png" 
+                                alt="Atari Realty Logo" 
+                                class="w-10 h-10 rounded-lg object-cover">
+                        </div>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black text-white tracking-tight">ATARI</h1>
+                        <p class="text-xs text-white/70 font-medium tracking-wider">REAL ESTATE BROKERAGE</p>
+                    </div>
+                </div>
+                <p class="text-sm text-white/60 mt-4 italic">Your Ultimate Real Estate Partner</p>
+            </div>
+            
+            <!-- Navigation with scroll -->
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <div class="p-6 overflow-y-auto sidebar-scrollbar">
+                    <!-- Main Menu -->
+                    <div class="mb-8">
+                        <h2 class="text-xs uppercase tracking-widest text-gray-400 mb-4 font-poppins font-semibold">MAIN MENU</h2>
+                        <ul class="space-y-0.5">
+                            <li>
+                                <a href="index.html" class="sidebar-menu-item flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-tachometer-alt text-gray-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Dashboard</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="search-engine.html" class="sidebar-menu-item active flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-search text-emerald mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Search Engine</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="auto-reminders.html" class="sidebar-menu-item flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-bell text-gray-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Auto Reminders</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="status-updates.html" class="sidebar-menu-item flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-sync-alt text-gray-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Status Updates</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="document-organizer.html" class="sidebar-menu-item flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-folder text-gray-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Document Organizer</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Tools Section -->
+                    <div class="mb-8">
+                        <h2 class="text-xs uppercase tracking-widest text-gray-400 mb-4 font-poppins font-semibold">TOOLS</h2>
+                        <ul class="space-y-0.5">
+                            <li>
+                                <a href="template-documents.html" class="sidebar-menu-item flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-file-contract text-gray-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Template Documents</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="auto-text-email.html" class="sidebar-menu-item flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-envelope text-gray-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Auto Text/Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="auto-promotion.html" class="sidebar-menu-item flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-bullhorn text-gray-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Auto Promotion</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="connect-apps.html" class="sidebar-menu-item flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-plug text-gray-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Connect Apps</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="developers-update.html" class="sidebar-menu-item flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-code text-gray-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Developer's Update</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="employees-leaderboard.html" class="sidebar-menu-item flex items-center px-3 py-3 rounded-lg">
+                                    <i class="fas fa-trophy text-gray-300 mr-3 text-base"></i>
+                                    <span class="font-medium font-poppins text-sm">Leaderboards</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Quick Stats Section -->
+                    <div class="mt-6 mb-6 bg-emerald/10 rounded-xl p-4 border border-emerald/20">
+                        <h3 class="text-sm font-medium font-poppins mb-3 text-emerald">Quick Stats</h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-300 font-poppins">Properties Listed</span>
+                                <span class="font-bold font-montserrat">48</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-300 font-poppins">Active Searches</span>
+                                <span class="font-bold font-montserrat">23</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-300 font-poppins">New Today</span>
+                                <span class="font-bold font-montserrat">7</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Connect Apps Section -->
+                    <div class="mb-4">
+                        <h2 class="text-xs uppercase tracking-widest text-gray-400 mb-4 font-poppins font-semibold">CONNECT APPS</h2>
+                        <div class="flex items-center space-x-2">
+                            <button class="bg-emerald/10 text-emerald p-2.5 rounded-lg hover:bg-emerald/20 smooth-transition flex items-center justify-center">
+                                <i class="fab fa-whatsapp text-base"></i>
+                            </button>
+                            <button class="bg-emerald/10 text-emerald p-2.5 rounded-lg hover:bg-emerald/20 smooth-transition flex items-center justify-center">
+                                <i class="fab fa-instagram text-base"></i>
+                            </button>
+                            <button class="bg-emerald/10 text-emerald p-2.5 rounded-lg hover:bg-emerald/20 smooth-transition flex items-center justify-center">
+                                <i class="fab fa-viber text-base"></i>
+                            </button>
+                            <button class="bg-emerald/10 text-emerald p-2.5 rounded-lg hover:bg-emerald/20 smooth-transition flex items-center justify-center">
+                                <i class="fab fa-facebook text-base"></i>
+                            </button>
+                            <button class="bg-emerald/10 text-emerald p-2.5 rounded-lg hover:bg-emerald/20 smooth-transition flex items-center justify-center">
+                                <i class="fas fa-envelope text-base"></i>
+                            </button>
+                            <button class="ml-auto text-gray-400 hover:text-white smooth-transition p-2">
+                                <i class="fas fa-chevron-right text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- User Profile -->
+                <div class="mt-auto p-5 border-t border-emerald/20">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 gold-gradient rounded-full flex items-center justify-center shadow-md">
+                            <span class="font-bold text-white text-base font-montserrat">L</span>
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <p class="font-medium font-poppins text-sm">Lucky</p>
+                            <p class="text-xs text-emerald font-poppins">luxury@atari.com</p>
+                        </div>
+                        <div class="relative">
+                            <a href="login.html" class="w-8 h-8 rounded-full bg-emerald/10 flex items-center justify-center hover:bg-emerald/20 smooth-transition">
+                                <i class="fas fa-sign-out-alt text-emerald text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Mobile Header -->
+            <div class="lg:hidden bg-luxury-green text-white p-4 flex items-center justify-between">
+                <button id="mobileMenuToggle" class="p-2">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <h1 class="text-xl font-bold font-montserrat">ATARI</h1>
+                <div class="w-10"></div>
+            </div>
+            
+            <!-- Mobile Sidebar (Hidden by default) -->
+            <div id="mobileSidebar" class="lg:hidden hidden absolute top-0 left-0 bottom-0 w-64 luxury-sidebar text-white z-50">
+                <!-- Mobile sidebar content would go here -->
+            </div>
+            
+            <!-- Header -->
+            <div class="bg-white border-b p-4 lg:p-6">
+                <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center space-y-4 lg:space-y-0">
+                    <div>
+                        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900 font-montserrat">Advanced Property Search</h1>
+                        <p class="text-gray-600 mt-1 font-poppins">Find your dream property with our intelligent search engine</p>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <!-- Quick Search Bar with Autocomplete -->
+                        <div class="relative flex-1 lg:w-80">
+                            <input type="text" 
+                                   id="quickSearch" 
+                                   placeholder="Quick search by address, ID, or keyword..." 
+                                   class="pl-10 pr-4 py-2.5 border rounded-xl w-full focus:outline-none modern-input font-poppins">
+                            <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
+                            <div id="autocompleteDropdown" class="autocomplete-dropdown">
+                                <!-- Autocomplete results will be inserted here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Header Icons -->
+                        <div class="flex items-center space-x-3">
+                            <!-- Mobile Search Toggle -->
+                            <button id="mobileSearchToggle" class="lg:hidden w-10 h-10 rounded-xl bg-light-green text-emerald flex items-center justify-center">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            
+                            <div class="relative">
+                                <button class="w-10 h-10 rounded-xl bg-gold-light text-gold-dark flex items-center justify-center hover:bg-gold/20 smooth-transition">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                                <span class="notification-badge">5</span>
+                            </div>
+                            
+                            <div class="relative">
+                                <button class="w-10 h-10 rounded-xl bg-light-green text-emerald flex items-center justify-center hover:bg-emerald/10 smooth-transition">
+                                    <i class="fas fa-envelope"></i>
+                                </button>
+                                <span class="notification-badge">3</span>
+                            </div>
+                            
+                            <div class="relative">
+                                <button class="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-100 smooth-transition">
+                                    <i class="fas fa-bell"></i>
+                                </button>
+                            </div>
+                            
+                            <button class="w-10 h-10 rounded-xl bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 smooth-transition">
+                                <i class="fas fa-cog"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Date and Info -->
+                <div class="mt-4 lg:mt-6 flex flex-wrap items-center text-sm text-gray-600 font-poppins gap-4">
+                    <div class="flex items-center bg-light-green px-3 py-1.5 rounded-lg">
+                        <i class="fas fa-database text-emerald mr-2"></i>
+                        <span class="font-medium">4,823 Properties in Database</span>
+                    </div>
+                    <div class="hidden lg:block elegant-divider w-8"></div>
+                    <div class="flex items-center">
+                        <i class="fas fa-sync-alt text-gold mr-2"></i>
+                        <span>Last Updated: <span class="font-medium">2 hours ago</span></span>
+                    </div>
+                    <div class="hidden lg:block elegant-divider w-8"></div>
+                    <div class="flex items-center">
+                        <i class="fas fa-chart-line text-emerald mr-2"></i>
+                        <span>Search Accuracy: <span class="font-medium">98.7%</span></span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Search Engine Content -->
+            <div class="flex-1 overflow-y-auto p-4 lg:p-6">
+                <!-- View Toggle Buttons -->
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex space-x-2">
+                        <button id="listViewBtn" class="px-4 py-2 bg-emerald text-white rounded-lg font-medium">
+                            <i class="fas fa-list mr-2"></i> List View
+                        </button>
+                        <button id="mapViewBtn" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200">
+                            <i class="fas fa-map mr-2"></i> Map View
+                        </button>
+                        <button id="compareViewBtn" class="px-4 py-2 bg-gold text-white rounded-lg font-medium hover:bg-gold/90">
+                            <i class="fas fa-balance-scale mr-2"></i> Compare (0)
+                        </button>
+                    </div>
+                    <button id="exportBtn" class="px-4 py-2 border border-emerald text-emerald rounded-lg font-medium hover:bg-emerald/10">
+                        <i class="fas fa-download mr-2"></i> Export Results
+                    </button>
+                </div>
+                
+                <!-- List View -->
+                <div id="listView" class="space-y-6">
+                    <!-- Advanced Search Filters -->
+                    <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 card-hover">
+                        <h2 class="text-2xl font-bold text-gray-900 font-montserrat mb-6">Advanced Search Filters</h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                            <!-- Location Filter -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Location</label>
+                                <div class="relative">
+                                    <input type="text" 
+                                           id="locationInput" 
+                                           placeholder="City, State, or ZIP" 
+                                           class="pl-10 pr-4 py-3 w-full border rounded-xl focus:outline-none modern-input font-poppins">
+                                    <i class="fas fa-map-marker-alt absolute left-3 top-3.5 text-gray-400"></i>
+                                </div>
+                            </div>
+                            
+                            <!-- Property Type -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Property Type</label>
+                                <select id="propertyType" class="w-full border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins">
+                                    <option value="">All Types</option>
+                                    <option value="house">House</option>
+                                    <option value="apartment">Apartment</option>
+                                    <option value="condo">Condominium</option>
+                                    <option value="villa">Villa</option>
+                                    <option value="penthouse">Penthouse</option>
+                                    <option value="commercial">Commercial</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Price Range -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Price Range</label>
+                                <div class="flex items-center space-x-2">
+                                    <input type="number" id="minPrice" placeholder="Min" class="w-1/2 border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins">
+                                    <span class="text-gray-400">-</span>
+                                    <input type="number" id="maxPrice" placeholder="Max" class="w-1/2 border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins">
+                                </div>
+                            </div>
+                            
+                            <!-- Bedrooms -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Bedrooms</label>
+                                <select id="bedrooms" class="w-full border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins">
+                                    <option value="">Any</option>
+                                    <option value="1">1+</option>
+                                    <option value="2">2+</option>
+                                    <option value="3">3+</option>
+                                    <option value="4">4+</option>
+                                    <option value="5">5+</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Advanced Filters Section (Collapsible) -->
+                        <div id="advancedFilters" class="hidden mb-8">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                                <!-- Bathrooms -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Bathrooms</label>
+                                    <select id="bathrooms" class="w-full border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins">
+                                        <option value="">Any</option>
+                                        <option value="1">1+</option>
+                                        <option value="2">2+</option>
+                                        <option value="3">3+</option>
+                                        <option value="4">4+</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Square Feet -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Square Feet</label>
+                                    <div class="flex items-center space-x-2">
+                                        <input type="number" id="minSqft" placeholder="Min" class="w-1/2 border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins">
+                                        <span class="text-gray-400">-</span>
+                                        <input type="number" id="maxSqft" placeholder="Max" class="w-1/2 border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins">
+                                    </div>
+                                </div>
+                                
+                                <!-- Year Built -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Year Built</label>
+                                    <div class="flex items-center space-x-2">
+                                        <input type="number" id="minYear" placeholder="From" class="w-1/2 border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins">
+                                        <span class="text-gray-400">-</span>
+                                        <input type="number" id="maxYear" placeholder="To" class="w-1/2 border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins">
+                                    </div>
+                                </div>
+                                
+                                <!-- Property Status -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2 font-poppins">Status</label>
+                                    <select id="propertyStatus" class="w-full border rounded-xl py-3 px-4 focus:outline-none modern-input font-poppins">
+                                        <option value="">All Status</option>
+                                        <option value="active">Active</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="sold">Sold</option>
+                                        <option value="rented">Rented</option>
+                                        <option value="coming-soon">Coming Soon</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Amenities -->
+                            <div class="mb-6">
+                                <label class="block text-sm font-medium text-gray-700 mb-3 font-poppins">Amenities</label>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" class="rounded text-emerald" value="pool">
+                                        <span class="text-sm">Swimming Pool</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" class="rounded text-emerald" value="gym">
+                                        <span class="text-sm">Gym</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" class="rounded text-emerald" value="garage">
+                                        <span class="text-sm">Garage</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" class="rounded text-emerald" value="garden">
+                                        <span class="text-sm">Garden</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Advanced Features Toggle -->
+                        <div class="mb-6">
+                            <button id="toggleAdvancedFilters" class="flex items-center text-emerald hover:text-emerald/80 font-medium font-poppins">
+                                <i class="fas fa-sliders-h mr-2"></i> Show Advanced Filters
+                                <i id="filterArrow" class="fas fa-chevron-down ml-2 text-sm"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Search Actions -->
+                        <div class="flex justify-between items-center">
+                            <button id="resetFiltersBtn" class="text-gray-600 hover:text-gray-800 font-medium font-poppins">
+                                <i class="fas fa-redo mr-2"></i> Reset Filters
+                            </button>
+                            <div class="flex space-x-4">
+                                <button id="searchBtn" class="bg-gray-100 text-gray-800 px-6 py-3 rounded-xl font-medium hover:bg-gray-200 smooth-transition font-poppins">
+                                    <i class="fas fa-search mr-2"></i> Search Properties
+                                </button>
+                                <button id="aiSearchBtn" class="gold-gradient text-white px-6 py-3 rounded-xl font-medium hover:opacity-90 smooth-transition font-poppins">
+                                    <i class="fas fa-magic mr-2"></i> AI Smart Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Search Results -->
+                    <div>
+                        <!-- Results Header -->
+                        <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-6 gap-4">
+                            <h2 class="text-2xl font-bold text-gray-900 font-montserrat">Search Results</h2>
+                            <div class="flex items-center space-x-4">
+                                <span class="text-sm text-gray-600 font-poppins">Sorted by: </span>
+                                <select id="sortBy" class="border rounded-lg py-2 px-3 focus:outline-none modern-input font-poppins">
+                                    <option>Relevance</option>
+                                    <option>Price: Low to High</option>
+                                    <option>Price: High to Low</option>
+                                    <option>Newest First</option>
+                                    <option>Square Feet</option>
+                                </select>
+                                <div class="flex items-center">
+                                    <button class="text-emerald hover:text-emerald/80 p-2">
+                                        <i class="fas fa-th-large text-xl"></i>
+                                    </button>
+                                    <button class="text-gray-400 hover:text-gray-600 p-2">
+                                        <i class="fas fa-list text-xl"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Results Count -->
+                        <div class="mb-6">
+                            <p class="text-gray-600 font-poppins">Showing <span id="resultCount" class="font-bold text-emerald">127</span> properties matching your criteria</p>
+                        </div>
+                        
+                        <!-- Property Cards Container -->
+                        <div id="propertyCards" class="space-y-6">
+                            <!-- Property cards will be dynamically generated here -->
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <div class="mt-8 flex justify-center">
+                            <nav class="flex items-center space-x-2">
+                                <button class="w-10 h-10 rounded-lg bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 smooth-transition">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button class="w-10 h-10 rounded-lg bg-emerald text-white flex items-center justify-center font-medium">1</button>
+                                <button class="w-10 h-10 rounded-lg bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 smooth-transition">2</button>
+                                <button class="w-10 h-10 rounded-lg bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 smooth-transition">3</button>
+                                <span class="text-gray-400">...</span>
+                                <button class="w-10 h-10 rounded-lg bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 smooth-transition">12</button>
+                                <button class="w-10 h-10 rounded-lg bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 smooth-transition">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Map View (Initially Hidden) -->
+                <div id="mapView" class="hidden">
+                    <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+                        <h2 class="text-2xl font-bold text-gray-900 font-montserrat mb-6">Property Map</h2>
+                        <div id="propertyMap" class="h-[500px] w-full rounded-xl overflow-hidden">
+                            <!-- Map will be initialized here -->
+                            <div class="h-full w-full flex items-center justify-center bg-gray-100">
+                                <div class="text-center">
+                                    <i class="fas fa-map-marked-alt text-5xl text-gray-300 mb-4"></i>
+                                    <p class="text-gray-500">Map view will load here</p>
+                                    <button id="loadMapBtn" class="mt-4 px-4 py-2 bg-emerald text-white rounded-lg font-medium">
+                                        Load Interactive Map
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="bg-light-green p-4 rounded-lg">
+                                <p class="text-sm text-gray-600">Properties on Map</p>
+                                <p class="text-2xl font-bold text-emerald">48</p>
+                            </div>
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-600">Avg Price in View</p>
+                                <p class="text-2xl font-bold text-blue-600">$2.4M</p>
+                            </div>
+                            <div class="bg-yellow-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-600">High Demand Areas</p>
+                                <p class="text-2xl font-bold text-yellow-600">12</p>
+                            </div>
+                            <div class="bg-purple-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-600">New Listings</p>
+                                <p class="text-2xl font-bold text-purple-600">7</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Comparison Modal -->
+    <div id="comparisonModal" class="comparison-modal">
+        <div class="comparison-content p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 font-montserrat">Compare Properties</h2>
+                <button id="closeComparisonBtn" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="comparison-table w-full">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="text-left">Features</th>
+                            <!-- Comparison columns will be added here dynamically -->
+                        </tr>
+                    </thead>
+                    <tbody id="comparisonBody">
+                        <!-- Comparison data will be added here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="mt-6 flex justify-end space-x-4">
+                <button id="clearComparisonBtn" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">
+                    Clear All
+                </button>
+                <button id="exportComparisonBtn" class="px-4 py-2 bg-emerald text-white rounded-lg font-medium">
+                    <i class="fas fa-download mr-2"></i> Export Comparison
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sample property data
+            const properties = [
+                {
+                    id: 1,
+                    name: "Beverly Hills Modern Mansion",
+                    address: "123 Sunset Blvd, Beverly Hills, CA",
+                    price: 8450000,
+                    pricePerSqft: 1250,
+                    bedrooms: 5,
+                    bathrooms: 6,
+                    sqft: 6760,
+                    year: 2022,
+                    type: "villa",
+                    status: "active",
+                    amenities: ["pool", "gym", "smart home"],
+                    favorite: true
+                },
+                {
+                    id: 2,
+                    name: "Manhattan Luxury Penthouse",
+                    address: "456 Park Ave, New York, NY",
+                    price: 12500000,
+                    pricePerSqft: 2150,
+                    bedrooms: 4,
+                    bathrooms: 5,
+                    sqft: 5810,
+                    year: 2023,
+                    type: "penthouse",
+                    status: "pending",
+                    amenities: ["rooftop", "concierge", "views"],
+                    favorite: false
+                },
+                {
+                    id: 3,
+                    name: "Miami Beachfront Villa",
+                    address: "789 Ocean Dr, Miami, FL",
+                    price: 6750000,
+                    pricePerSqft: 980,
+                    bedrooms: 6,
+                    bathrooms: 7,
+                    sqft: 6890,
+                    year: 2021,
+                    type: "villa",
+                    status: "active",
+                    amenities: ["beach", "pool", "boat dock"],
+                    favorite: true
+                }
+            ];
+
+            // Sample autocomplete data
+            const autocompleteData = [
+                "Beverly Hills, CA",
+                "New York, NY",
+                "Miami, FL",
+                "Los Angeles, CA",
+                "San Francisco, CA",
+                "Chicago, IL",
+                "Houston, TX",
+                "Phoenix, AZ",
+                "Philadelphia, PA",
+                "San Antonio, TX",
+                "San Diego, CA",
+                "Dallas, TX",
+                "San Jose, CA",
+                "Austin, TX",
+                "Jacksonville, FL"
+            ];
+
+            // State management
+            let currentView = 'list';
+            let comparisonProperties = [];
+            let searchHistory = [];
+            let savedSearches = [];
+
+            // Initialize the page
+            initializePage();
+
+            function initializePage() {
+                // Remove problematic sidebar JavaScript that was preventing navigation
+                // The links will now work normally
+                
+                // Generate property cards
+                generatePropertyCards();
+                
+                // Setup event listeners
+                setupEventListeners();
+                
+                // Load saved searches from localStorage
+                loadSavedSearches();
+                
+                // Load search history from localStorage
+                loadSearchHistory();
+            }
+
+            function setupEventListeners() {
+                // View toggle buttons
+                document.getElementById('listViewBtn').addEventListener('click', () => switchView('list'));
+                document.getElementById('mapViewBtn').addEventListener('click', () => switchView('map'));
+                document.getElementById('compareViewBtn').addEventListener('click', showComparisonModal);
+                
+                // Search functionality
+                document.getElementById('searchBtn').addEventListener('click', performSearch);
+                document.getElementById('aiSearchBtn').addEventListener('click', performAISearch);
+                document.getElementById('resetFiltersBtn').addEventListener('click', resetFilters);
+                
+                // Quick search autocomplete
+                const quickSearch = document.getElementById('quickSearch');
+                const autocompleteDropdown = document.getElementById('autocompleteDropdown');
+                
+                quickSearch.addEventListener('input', debounce(function(e) {
+                    const query = e.target.value.toLowerCase();
+                    if (query.length > 2) {
+                        showAutocomplete(query);
+                    } else {
+                        autocompleteDropdown.style.display = 'none';
+                    }
+                }, 300));
+                
+                // Close autocomplete when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!quickSearch.contains(e.target) && !autocompleteDropdown.contains(e.target)) {
+                        autocompleteDropdown.style.display = 'none';
+                    }
+                });
+                
+                // Advanced filters toggle
+                document.getElementById('toggleAdvancedFilters').addEventListener('click', toggleAdvancedFilters);
+                
+                // Export functionality
+                document.getElementById('exportBtn').addEventListener('click', exportResults);
+                
+                // Comparison modal
+                document.getElementById('closeComparisonBtn').addEventListener('click', () => {
+                    document.getElementById('comparisonModal').style.display = 'none';
+                });
+                
+                document.getElementById('clearComparisonBtn').addEventListener('click', clearComparison);
+                document.getElementById('exportComparisonBtn').addEventListener('click', exportComparison);
+                
+                // Close modal when clicking outside
+                document.getElementById('comparisonModal').addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.style.display = 'none';
+                    }
+                });
+            }
+
+            function generatePropertyCards() {
+                const container = document.getElementById('propertyCards');
+                container.innerHTML = '';
+                
+                properties.forEach(property => {
+                    const card = createPropertyCard(property);
+                    container.appendChild(card);
+                });
+            }
+
+            function createPropertyCard(property) {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-2xl shadow-sm border border-gray-100 card-hover overflow-hidden';
+                card.dataset.id = property.id;
+                
+                card.innerHTML = `
+                    <div class="flex flex-col lg:flex-row">
+                        <div class="lg:w-1/3">
+                            <div class="h-48 lg:h-full bg-gradient-to-br from-emerald/20 to-gold/10 relative">
+                                <div class="absolute top-4 left-4">
+                                    <span class="bg-emerald text-white text-xs px-3 py-1 rounded-full font-medium font-poppins">${property.status === 'active' ? 'New' : property.status === 'pending' ? 'Pending' : 'Hot Deal'}</span>
+                                </div>
+                                <div class="absolute top-4 right-4">
+                                    <button class="compare-checkbox w-8 h-8 rounded-lg bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white">
+                                        <i class="fas fa-balance-scale text-gray-600"></i>
+                                    </button>
+                                </div>
+                                <div class="absolute bottom-4 right-4">
+                                    <button class="favorite-btn w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white">
+                                        <i class="${property.favorite ? 'fas fa-heart text-red-500' : 'far fa-heart text-gray-600'}"></i>
+                                    </button>
+                                </div>
+                                <div class="p-6 h-full flex items-center justify-center">
+                                    <i class="fas fa-home text-emerald text-5xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="lg:w-2/3 p-6">
+                            <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-4">
+                                <div class="mb-4 lg:mb-0">
+                                    <h3 class="text-xl font-bold text-gray-900 font-montserrat">${property.name}</h3>
+                                    <p class="text-gray-600 font-poppins"><i class="fas fa-map-marker-alt text-emerald mr-2"></i> ${property.address}</p>
+                                </div>
+                                <div class="text-left lg:text-right">
+                                    <p class="text-2xl font-bold text-emerald font-montserrat">$${property.price.toLocaleString()}</p>
+                                    <p class="text-sm text-gray-500 font-poppins">$${property.pricePerSqft}/sq ft</p>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                                <div class="text-center">
+                                    <p class="text-sm text-gray-500 font-poppins">Bedrooms</p>
+                                    <p class="font-bold text-gray-900 font-montserrat">${property.bedrooms}</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-sm text-gray-500 font-poppins">Bathrooms</p>
+                                    <p class="font-bold text-gray-900 font-montserrat">${property.bathrooms}</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-sm text-gray-500 font-poppins">Sq Ft</p>
+                                    <p class="font-bold text-gray-900 font-montserrat">${property.sqft.toLocaleString()}</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-sm text-gray-500 font-poppins">Year</p>
+                                    <p class="font-bold text-gray-900 font-montserrat">${property.year}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center space-y-4 lg:space-y-0">
+                                <div class="flex flex-wrap gap-2">
+                                    ${property.amenities.map(amenity => 
+                                        `<span class="text-xs bg-emerald/10 text-emerald px-3 py-1 rounded-full font-poppins capitalize">${amenity}</span>`
+                                    ).join('')}
+                                </div>
+                                <div class="flex flex-wrap gap-2">
+                                    <button class="view-details-btn bg-emerald text-white px-4 py-2 rounded-lg font-medium hover:bg-emerald/90 smooth-transition font-poppins">
+                                        <i class="fas fa-eye mr-2"></i> View Details
+                                    </button>
+                                    <button class="contact-btn bg-gray-100 text-gray-800 px-4 py-2 rounded-lg font-medium hover:bg-gray-200 smooth-transition font-poppins">
+                                        <i class="fas fa-phone mr-2"></i> Contact
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Add event listeners to buttons
+                const favoriteBtn = card.querySelector('.favorite-btn');
+                const compareBtn = card.querySelector('.compare-checkbox');
+                const viewDetailsBtn = card.querySelector('.view-details-btn');
+                const contactBtn = card.querySelector('.contact-btn');
+                
+                favoriteBtn.addEventListener('click', () => toggleFavorite(property.id, favoriteBtn));
+                compareBtn.addEventListener('click', () => addToComparison(property, compareBtn));
+                viewDetailsBtn.addEventListener('click', () => viewPropertyDetails(property));
+                contactBtn.addEventListener('click', () => contactProperty(property));
+                
+                return card;
+            }
+
+            function showAutocomplete(query) {
+                const dropdown = document.getElementById('autocompleteDropdown');
+                const results = autocompleteData.filter(item => 
+                    item.toLowerCase().includes(query)
+                );
+                
+                dropdown.innerHTML = '';
+                
+                if (results.length > 0) {
+                    results.forEach(result => {
+                        const item = document.createElement('div');
+                        item.className = 'autocomplete-item';
+                        item.textContent = result;
+                        item.addEventListener('click', () => {
+                            document.getElementById('quickSearch').value = result;
+                            dropdown.style.display = 'none';
+                            performSearch();
+                        });
+                        dropdown.appendChild(item);
+                    });
+                    dropdown.style.display = 'block';
+                } else {
+                    dropdown.style.display = 'none';
+                }
+            }
+
+            function switchView(view) {
+                currentView = view;
+                
+                // Update button states
+                document.getElementById('listViewBtn').className = 
+                    view === 'list' 
+                    ? 'px-4 py-2 bg-emerald text-white rounded-lg font-medium'
+                    : 'px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200';
+                
+                document.getElementById('mapViewBtn').className = 
+                    view === 'map' 
+                    ? 'px-4 py-2 bg-emerald text-white rounded-lg font-medium'
+                    : 'px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200';
+                
+                // Show/hide views
+                document.getElementById('listView').style.display = view === 'list' ? 'block' : 'none';
+                document.getElementById('mapView').style.display = view === 'map' ? 'block' : 'none';
+                
+                if (view === 'map') {
+                    // Initialize map if not already done
+                    initializeMap();
+                }
+            }
+
+            function toggleAdvancedFilters() {
+                const filters = document.getElementById('advancedFilters');
+                const arrow = document.getElementById('filterArrow');
+                const toggleBtn = document.getElementById('toggleAdvancedFilters');
+                
+                if (filters.classList.contains('hidden')) {
+                    filters.classList.remove('hidden');
+                    arrow.className = 'fas fa-chevron-up ml-2 text-sm';
+                    toggleBtn.innerHTML = '<i class="fas fa-sliders-h mr-2"></i> Hide Advanced Filters' + toggleBtn.innerHTML.slice(toggleBtn.innerHTML.indexOf('<i class="fas fa-chevron-up'));
+                } else {
+                    filters.classList.add('hidden');
+                    arrow.className = 'fas fa-chevron-down ml-2 text-sm';
+                    toggleBtn.innerHTML = '<i class="fas fa-sliders-h mr-2"></i> Show Advanced Filters' + toggleBtn.innerHTML.slice(toggleBtn.innerHTML.indexOf('<i class="fas fa-chevron-down'));
+                }
+            }
+
+            function performSearch() {
+                // Get filter values
+                const location = document.getElementById('locationInput').value;
+                const propertyType = document.getElementById('propertyType').value;
+                const minPrice = document.getElementById('minPrice').value;
+                const maxPrice = document.getElementById('maxPrice').value;
+                const bedrooms = document.getElementById('bedrooms').value;
+                const bathrooms = document.getElementById('bathrooms').value;
+                const minSqft = document.getElementById('minSqft').value;
+                const maxSqft = document.getElementById('maxSqft').value;
+                const minYear = document.getElementById('minYear').value;
+                const maxYear = document.getElementById('maxYear').value;
+                const status = document.getElementById('propertyStatus').value;
+                
+                // Save search to history
+                const search = {
+                    location,
+                    propertyType,
+                    minPrice,
+                    maxPrice,
+                    bedrooms,
+                    timestamp: new Date().toISOString()
+                };
+                
+                searchHistory.unshift(search);
+                if (searchHistory.length > 10) searchHistory.pop();
+                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+                
+                // Show search results
+                const results = filterProperties();
+                document.getElementById('resultCount').textContent = results.length;
+                
+                alert(`🔍 Searching...\nFound ${results.length} properties matching your criteria.`);
+            }
+
+            function filterProperties() {
+                // This would filter the properties based on selected filters
+                // For now, return all properties
+                return properties;
+            }
+
+            function performAISearch() {
+                const description = prompt("🤖 Describe your dream property:\n\nExample: 'Modern 3-bedroom apartment in NYC with gym and concierge'");
+                
+                if (description) {
+                    alert(`🤖 AI Search Assistant Activated!\n\nSearching for: "${description}"\n\nOur AI is analyzing 4,823 properties to find your perfect match.\n\nEstimated time: 10 seconds`);
+                    
+                    // Simulate AI search results
+                    setTimeout(() => {
+                        alert(`✅ AI Search Complete!\n\nFound 23 properties matching your description.\n\nTop Recommendations:\n1. Modern Luxury Loft - Manhattan\n2. Contemporary Condo - Brooklyn\n3. Smart Home Apartment - Queens`);
+                    }, 2000);
+                }
+            }
+
+            function resetFilters() {
+                // Reset all filter inputs
+                document.getElementById('locationInput').value = '';
+                document.getElementById('propertyType').value = '';
+                document.getElementById('minPrice').value = '';
+                document.getElementById('maxPrice').value = '';
+                document.getElementById('bedrooms').value = '';
+                document.getElementById('bathrooms').value = '';
+                document.getElementById('minSqft').value = '';
+                document.getElementById('maxSqft').value = '';
+                document.getElementById('minYear').value = '';
+                document.getElementById('maxYear').value = '';
+                document.getElementById('propertyStatus').value = '';
+                
+                // Uncheck all amenities
+                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                
+                alert('🔄 All filters have been reset.');
+            }
+
+            function toggleFavorite(propertyId, button) {
+                const icon = button.querySelector('i');
+                const property = properties.find(p => p.id === propertyId);
+                
+                if (property) {
+                    property.favorite = !property.favorite;
+                    if (property.favorite) {
+                        icon.className = 'fas fa-heart text-red-500';
+                        alert('❤️ Added to favorites!');
+                    } else {
+                        icon.className = 'far fa-heart text-gray-600';
+                        alert('💔 Removed from favorites');
+                    }
+                }
+            }
+
+            function addToComparison(property, button) {
+                const index = comparisonProperties.findIndex(p => p.id === property.id);
+                
+                if (index === -1) {
+                    comparisonProperties.push(property);
+                    button.innerHTML = '<i class="fas fa-check text-emerald"></i>';
+                    alert(`➕ Added "${property.name}" to comparison`);
+                } else {
+                    comparisonProperties.splice(index, 1);
+                    button.innerHTML = '<i class="fas fa-balance-scale text-gray-600"></i>';
+                    alert(`➖ Removed "${property.name}" from comparison`);
+                }
+                
+                updateComparisonButton();
+            }
+
+            function updateComparisonButton() {
+                const btn = document.getElementById('compareViewBtn');
+                btn.textContent = `Compare (${comparisonProperties.length})`;
+                
+                if (comparisonProperties.length > 0) {
+                    btn.className = 'px-4 py-2 bg-emerald text-white rounded-lg font-medium hover:bg-emerald/90';
+                } else {
+                    btn.className = 'px-4 py-2 bg-gold text-white rounded-lg font-medium hover:bg-gold/90';
+                }
+            }
+
+            function showComparisonModal() {
+                if (comparisonProperties.length === 0) {
+                    alert('Please add properties to comparison first!');
+                    return;
+                }
+                
+                const modal = document.getElementById('comparisonModal');
+                const body = document.getElementById('comparisonBody');
+                const header = document.querySelector('.comparison-table thead tr');
+                
+                // Clear existing content
+                header.innerHTML = '<th class="text-left">Features</th>';
+                body.innerHTML = '';
+                
+                // Add property columns to header
+                comparisonProperties.forEach((property, index) => {
+                    const th = document.createElement('th');
+                    th.className = 'text-center min-w-[200px]';
+                    th.innerHTML = `
+                        <div class="font-bold text-lg">${property.name}</div>
+                        <div class="text-sm text-gray-600">$${property.price.toLocaleString()}</div>
+                        <button class="remove-compare mt-2 px-2 py-1 text-xs bg-red-100 text-red-600 rounded hover:bg-red-200" data-index="${index}">
+                            Remove
+                        </button>
+                    `;
+                    header.appendChild(th);
+                });
+                
+                // Define comparison features
+                const features = [
+                    { name: 'Price', key: 'price', format: val => `$${val.toLocaleString()}` },
+                    { name: 'Price per Sq Ft', key: 'pricePerSqft', format: val => `$${val}` },
+                    { name: 'Bedrooms', key: 'bedrooms' },
+                    { name: 'Bathrooms', key: 'bathrooms' },
+                    { name: 'Square Feet', key: 'sqft', format: val => val.toLocaleString() },
+                    { name: 'Year Built', key: 'year' },
+                    { name: 'Type', key: 'type', format: val => val.charAt(0).toUpperCase() + val.slice(1) },
+                    { name: 'Status', key: 'status', format: val => val.charAt(0).toUpperCase() + val.slice(1) },
+                    { name: 'Amenities', key: 'amenities', format: val => val.map(a => a.charAt(0).toUpperCase() + a.slice(1)).join(', ') }
+                ];
+                
+                // Add features to body
+                features.forEach(feature => {
+                    const row = document.createElement('tr');
+                    const featureCell = document.createElement('td');
+                    featureCell.className = 'font-medium bg-gray-50';
+                    featureCell.textContent = feature.name;
+                    row.appendChild(featureCell);
+                    
+                    comparisonProperties.forEach(property => {
+                        const valueCell = document.createElement('td');
+                        let value = property[feature.key];
+                        
+                        if (feature.format) {
+                            value = feature.format(value);
+                        }
+                        
+                        valueCell.textContent = value;
+                        valueCell.className = 'text-center';
+                        row.appendChild(valueCell);
+                    });
+                    
+                    body.appendChild(row);
+                });
+                
+                // Show modal
+                modal.style.display = 'flex';
+                
+                // Add event listeners to remove buttons
+                document.querySelectorAll('.remove-compare').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.dataset.index);
+                        comparisonProperties.splice(index, 1);
+                        showComparisonModal(); // Refresh modal
+                    });
+                });
+            }
+
+            function clearComparison() {
+                comparisonProperties = [];
+                updateComparisonButton();
+                document.getElementById('comparisonModal').style.display = 'none';
+                alert('🗑️ Comparison cleared.');
+                
+                // Reset compare buttons in property cards
+                document.querySelectorAll('.compare-checkbox').forEach(btn => {
+                    btn.innerHTML = '<i class="fas fa-balance-scale text-gray-600"></i>';
+                });
+            }
+
+            function exportResults() {
+                alert('📥 Exporting search results...\n\nOptions:\n1. Export as PDF\n2. Export as Excel\n3. Export as CSV\n4. Share link\n\nFeature would open export dialog in full implementation.');
+            }
+
+            function exportComparison() {
+                if (comparisonProperties.length === 0) {
+                    alert('No properties to export!');
+                    return;
+                }
+                
+                alert('📊 Exporting comparison...\n\nComparison data would be exported as CSV/Excel in full implementation.');
+            }
+
+            function viewPropertyDetails(property) {
+                alert(`🏠 Property Details: ${property.name}\n\n• Full Address: ${property.address}\n• Price: $${property.price.toLocaleString()}\n• Beds: ${property.bedrooms} | Baths: ${property.bathrooms}\n• Square Feet: ${property.sqft.toLocaleString()}\n• Year Built: ${property.year}\n• Type: ${property.type}\n• Status: ${property.status}\n• Amenities: ${property.amenities.join(', ')}`);
+            }
+
+            function contactProperty(property) {
+                alert(`📞 Contact Agent for: ${property.name}\n\nWould open contact form with:\n• Your contact information\n• Preferred contact method\n• Appointment scheduling\n• Custom message`);
+            }
+
+            function loadSavedSearches() {
+                const saved = localStorage.getItem('savedSearches');
+                if (saved) {
+                    savedSearches = JSON.parse(saved);
+                }
+            }
+
+            function loadSearchHistory() {
+                const history = localStorage.getItem('searchHistory');
+                if (history) {
+                    searchHistory = JSON.parse(history);
+                }
+            }
+
+            function initializeMap() {
+                const mapContainer = document.getElementById('propertyMap');
+                const loadBtn = document.getElementById('loadMapBtn');
+                
+                if (loadBtn) {
+                    loadBtn.addEventListener('click', function() {
+                        mapContainer.innerHTML = '<div id="map" class="h-full w-full"></div>';
+                        
+                        // Initialize Leaflet map (simulated for demo)
+                        setTimeout(() => {
+                            alert('🗺️ Interactive map would load here with property markers.\n\nIn full implementation, this would show:\n• Property locations as markers\n• Clustering for dense areas\n• Filtering by map bounds\n• Heatmaps for price density');
+                        }, 500);
+                    });
+                }
+            }
+
+            // Utility function for debouncing
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+        });
+    </script>
+</body>
+</html>
